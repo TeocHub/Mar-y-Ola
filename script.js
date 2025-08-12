@@ -1,21 +1,14 @@
-// Reemplaza con tus propias credenciales
-const API_KEY = 'AIzaSyDcDTJGYTMYyGdvR-8-UZXIrKdJYj4p3Sw';
-const CLIENT_ID = '139919704286-9fh4b033olnbgap2l0mn3tojjqv44q8j.apps.googleusercontent.com';
-const SPREADSHEET_ID = '1okGqKC8Qe8NE4_TTSC13T_xxxIHK8KghtAx4Kt4I9r0';
-const DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
-const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
-
-// Esta función debe ser global para que el HTML la pueda llamar
+// Estas funciones deben estar en el ámbito global para que el HTML pueda llamarlas
 window.handleClientLoad = () => {
     gapi.load('client:auth2', initClient);
 }
 
 function initClient() {
     gapi.client.init({
-        apiKey: API_KEY,
-        clientId: CLIENT_ID,
-        discoveryDocs: DISCOVERY_DOCS,
-        scope: SCOPES
+        apiKey: 'AIzaSyDcDTJGYTMYyGdvR-8-UZXIrKdJYj4p3Sw',
+        clientId: '139919704286-9fh4b033olnbgap2l0mn3tojjqv44q8j.apps.googleusercontent.com',
+        discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"],
+        scope: 'https://www.googleapis.com/auth/spreadsheets'
     }).then(() => {
         gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
         updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
@@ -37,8 +30,8 @@ function updateSigninStatus(isSignedIn) {
 
 // El resto de tu código va dentro del evento DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
-
-    // Elementos del DOM
+    const SPREADSHEET_ID = '1okGqKC8Qe8NE4_TTSC13T_xxxIHK8KghtAx4Kt4I9r0'; // El ID se encuentra en la URL de tu Google Sheet
+    
     const btnVentas = document.getElementById('btnVentas');
     const btnInventario = document.getElementById('btnInventario');
     const seccionVentas = document.getElementById('seccionVentas');
@@ -53,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let inventario = [];
     let carroDeCompra = [];
 
-    // Funciones principales
+    // Función principal para cargar el inventario
     async function cargarInventario() {
         try {
             const response = await gapi.client.sheets.spreadsheets.values.get({

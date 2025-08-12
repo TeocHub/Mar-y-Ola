@@ -30,7 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function cargarInventario() {
         try {
-            const response = await fetch(URL_DE_TU_SCRIPT);
+            const response = await fetch(URL_DE_TU_SCRIPT, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
             if (!response.ok) throw new Error('Error al obtener el inventario.');
             inventario = await response.json();
             renderizarVentas();
@@ -105,11 +108,13 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch(URL_DE_TU_SCRIPT, {
                 method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ventas: carroDeCompra })
             });
             if (!response.ok) throw new Error('Error al registrar la venta.');
 
-            alert('Venta realizada y stock actualizado en Google Sheets.');
+            const mensaje = await response.text();
+            alert(mensaje);
             carroDeCompra = [];
             actualizarCarroVenta();
             await cargarInventario(); 

@@ -28,11 +28,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let inventario = [];
     let carroDeCompra = [];
 
+    // ---- Cargar inventario (GET) ----
     async function cargarInventario() {
         try {
             const response = await fetch(URL_DE_TU_SCRIPT, {
                 method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
+                headers: { 'Content-Type': 'application/json' },
+                mode: 'cors' // Importante para llamadas entre dominios
             });
             if (!response.ok) throw new Error('Error al obtener el inventario.');
             inventario = await response.json();
@@ -99,6 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         totalVentaSpan.textContent = total.toFixed(2);
     }
 
+    // ---- Realizar venta (POST) ----
     btnRealizarVenta.addEventListener('click', async () => {
         if (carroDeCompra.length === 0) {
             alert('El carro está vacío.');
@@ -109,12 +112,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(URL_DE_TU_SCRIPT, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                mode: 'cors',
                 body: JSON.stringify({ ventas: carroDeCompra })
             });
             if (!response.ok) throw new Error('Error al registrar la venta.');
 
-            const mensaje = await response.text();
-            alert(mensaje);
+            alert('Venta realizada y stock actualizado en Google Sheets.');
             carroDeCompra = [];
             actualizarCarroVenta();
             await cargarInventario(); 

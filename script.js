@@ -43,50 +43,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Funciones de la sección de ventas
-    // Funciones de la sección de ventas
-// Funciones de la sección de ventas
     function renderizarVentas() {
         listaProductos.innerHTML = '';
         inventario.forEach(producto => {
-            // Aquí generas un ID único combinando Forma y Aroma
-            const productoID = `${producto['Forma/Nombre']}-${producto['Aroma']}`;
+            // Usa 'Forma' y 'Quedan' en lugar de 'Forma/Nombre' y 'Cuantas Quedan'
+            const productoID = `${producto['Forma']}-${producto['Aroma']}`;
             const card = document.createElement('div');
             card.classList.add('producto-card');
             card.innerHTML = `
-            <h4>${producto['Forma/Nombre']} - ${producto['Aroma']}</h4>
-            <p>Stock: ${producto['Cuantas Quedan']}</p>
-            <p>Precio: $${parseFloat(producto['Precio']).toFixed(2)}</p>
-            <button onclick="agregarAlCarro('${productoID}')">Agregar</button>
+                <h4>${producto['Forma']} - ${producto['Aroma']}</h4>
+                <p>Stock: ${producto['Quedan']}</p>
+                <p>Precio: $${parseFloat(producto['Precio']).toFixed(2)}</p>
+                <button onclick="agregarAlCarro('${productoID}')">Agregar</button>
             `;
             listaProductos.appendChild(card);
         });
     }
 
     window.agregarAlCarro = (productoID) => {
-        const [formaNombre, aroma] = productoID.split('-');
+        const [forma, aroma] = productoID.split('-');
         const productoInventario = inventario.find(p => 
-            p['Forma/Nombre'] === formaNombre && p['Aroma'] === aroma
-        ); 
+            p['Forma'] === forma && p['Aroma'] === aroma
+        );
 
-    if (productoInventario && productoInventario['Cuantas Quedan'] > 0) {
-        let productoEnCarro = carroDeCompra.find(p => p.productoID === productoID);
-        if (productoEnCarro) {
-            productoEnCarro.cantidad++;
+        if (productoInventario && productoInventario['Quedan'] > 0) {
+            let productoEnCarro = carroDeCompra.find(p => p.productoID === productoID);
+            if (productoEnCarro) {
+                productoEnCarro.cantidad++;
+            } else {
+                carroDeCompra.push({
+                    productoID: productoID,
+                    forma: productoInventario['Forma'],
+                    aroma: productoInventario['Aroma'],
+                    precio: parseFloat(productoInventario['Precio']),
+                    cantidad: 1
+                });
+            }
+            productoInventario['Quedan']--;
+            actualizarCarroVenta();
+            renderizarVentas();
         } else {
-            carroDeCompra.push({
-                productoID: productoID, // Guardamos el ID único
-                formaNombre: productoInventario['Forma/Nombre'],
-                aroma: productoInventario['Aroma'],
-                precio: parseFloat(productoInventario['Precio']),
-                cantidad: 1
-            });
+            alert('Producto sin stock disponible.');
         }
-        productoInventario['Cuantas Quedan']--;
-        actualizarCarroVenta();
-        renderizarVentas();
-    } else {
-        alert('Producto sin stock disponible.');
-    }
     };
 
     function actualizarCarroVenta() {

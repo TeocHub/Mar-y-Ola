@@ -30,7 +30,7 @@ function updateSigninStatus(isSignedIn) {
 
 // El resto de tu código va dentro del evento DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
-    const SPREADSHEET_ID = '1okGqKC8Qe8NE4_TTSC13T_xxxIHK8KghtAx4Kt4I9r0'; // El ID se encuentra en la URL de tu Google Sheet
+    const SPREADSHEET_ID = '1okGqKC8Qe8NE4_TTSC13T_xxxIHK8KghtAx4Kt4I9r0';
     
     const btnVentas = document.getElementById('btnVentas');
     const btnInventario = document.getElementById('btnInventario');

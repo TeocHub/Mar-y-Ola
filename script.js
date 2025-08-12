@@ -54,74 +54,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Funciones principales
     async function cargarInventario() {
-        try {
-            const response = await gapi.client.sheets.spreadsheets.values.get({
-                spreadsheetId: SPREADSHEET_ID,
-                range: 'Inventario - Mar y Ola!A:F', // Asegúrate de que el rango sea correcto
-            });
-            
-            const data = response.result.values;
-            const headers = data.shift();
-            inventario = data.map(row => {
-                let obj = {};
-                headers.forEach((header, i) => {
-                    obj[header] = row[i];
-                });
-                return obj;
-            });
-            
+    try {
+        const response = await gapi.client.sheets.spreadsheets.values.get({
+            spreadsheetId: SPREADSHEET_ID,
+            range: 'Inventario - Mar y Ola!A:F', // Asegúrate de que el rango sea correcto
+        });
+        
+        const data = response.result.values;
+        if (!data || data.length === 0) {
+            console.warn('No se encontraron datos en la hoja de cálculo.');
+            inventario = [];
             renderizarVentas();
             renderizarInventario();
-
-        } catch (error) {
-            console.error('Error al cargar el inventario:', error);
-            alert('No se pudo cargar el inventario. Asegúrate de haber iniciado sesión y que la API esté configurada correctamente.');
+            return;
         }
-    }
 
-    // Funciones de la sección de ventas
-    function renderizarVentas() {
-        listaProductos.innerHTML = '';
+        const headers = data.shift();
+        inventario = data.map(row => {
+            let obj = {};
+            headers.forEach((header, i) => {
+                obj[header] = row[i];
+            });
+            return obj;
+        });
+        
+        // Llamamos a las funciones de renderizado solo después de que el inventario se haya cargado
+        renderizarVentas();
+        renderizarInventario();
+
+    } catch (error) {
+        console.error('Error al cargar el inventario:', error);
+        alert('No se pudo cargar el inventario. Revisa la consola para más detalles.');
+    }
+}
+
+// ... (resto del código) ...
+
+    // Funciones de la sección de inventario
+    function renderizarInventario() {
+        tablaInventarioBody.innerHTML = '';
         inventario.forEach(producto => {
-            const productoID = `${producto['Forma']}-${producto['Aroma']}`;
-            const card = document.createElement('div');
-            card.classList.add('producto-card');
-            card.innerHTML = `
-                <h4>${producto['Forma']} - ${producto['Aroma']}</h4>
-                <p>Stock: ${producto['Quedan']}</p>
-                <p>Precio: $${parseFloat(producto['Precio']).toFixed(2)}</p>
-                <button onclick="agregarAlCarro('${productoID}')">Agregar</button>
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${producto['Tipo de Cera']}</td>
+                <td>${producto['Colección']}</td>
+                <td>${producto['Forma']}</td>
+                <td>${producto['Aroma']}</td>
+                <td>${producto['Quedan']}</td>
+                <td>$${parseFloat(producto['Precio']).toFixed(2)}</td>
             `;
-            listaProductos.appendChild(card);
+            tablaInventarioBody.appendChild(tr);
         });
     }
-
-    window.agregarAlCarro = (productoID) => {
-        const [forma, aroma] = productoID.split('-');
-        const productoInventario = inventario.find(p => 
-            p['Forma'] === forma && p['Aroma'] === aroma
-        ); 
-
-        if (productoInventario && productoInventario['Quedan'] > 0) {
-            let productoEnCarro = carroDeCompra.find(p => p.productoID === productoID);
-            if (productoEnCarro) {
-                productoEnCarro.cantidad++;
-            } else {
-                carroDeCompra.push({
-                    productoID: productoID, 
-                    forma: productoInventario['Forma'],
-                    aroma: productoInventario['Aroma'],
-                    precio: parseFloat(productoInventario['Precio']),
-                    cantidad: 1
-                });
-            }
-            productoInventario['Quedan']--;
-            actualizarCarroVenta();
-            renderizarVentas();
-        } else {
-            alert('Producto sin stock disponible.');
-        }
-    };
 
     function actualizarCarroVenta() {
         listaVenta.innerHTML = '';

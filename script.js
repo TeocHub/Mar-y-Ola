@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const URL_DE_TU_SCRIPT = 'https://script.google.com/macros/s/AKfycbyK4jzkwqH-QMWIxB3gW15Duz9VeGCPXm5PnwVqt3vc0M5xTQbqD2i7vJculXSDYX4a/exec'; 
+    const URL_DE_TU_SCRIPT = 'https://script.google.com/macros/s/AKfycbyK4jzkwqH-QMWIxB3gW15Duz9VeGCPXm5PnwVqt3vc0M5xTQbqD2i7vJculXSDYX4a/exec';
 
     const btnVentas = document.getElementById('btnVentas');
     const btnInventario = document.getElementById('btnInventario');
@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let inventario = [];
     let carroDeCompra = [];
 
-    // Carga el inventario desde Google Sheets
     async function cargarInventario() {
         try {
             const response = await fetch(URL_DE_TU_SCRIPT);
@@ -42,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Funciones de la sección de ventas
     function renderizarVentas() {
         listaProductos.innerHTML = '';
         inventario.forEach(producto => {
@@ -138,7 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(err => console.error('Error al copiar: ', err));
     });
 
-    // Funciones de la sección de inventario
     function renderizarInventario() {
         tablaInventarioBody.innerHTML = '';
         inventario.forEach(producto => {

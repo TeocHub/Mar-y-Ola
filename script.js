@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const URL_DE_TU_SCRIPT = 'https://script.google.com/macros/s/AKfycbyK4jzkwqH-QMWIxB3gW15Duz9VeGCPXm5PnwVqt3vc0M5xTQbqD2i7vJculXSDYX4a/exec'; // REEMPLAZA ESTO CON TU URL
+    const URL_DE_TU_SCRIPT = 'https://script.google.com/macros/s/AKfycbyK4jzkwqH-QMWIxB3gW15Duz9VeGCPXm5PnwVqt3vc0M5xTQbqD2i7vJculXSDYX4a/exec'; 
 
     const btnVentas = document.getElementById('btnVentas');
     const btnInventario = document.getElementById('btnInventario');
@@ -9,13 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
     btnVentas.addEventListener('click', () => {
         seccionVentas.classList.remove('oculta');
         seccionInventario.classList.add('oculta');
-        cargarInventario(); // Recargamos el inventario al cambiar de vista
+        cargarInventario(); 
     });
 
     btnInventario.addEventListener('click', () => {
         seccionVentas.classList.add('oculta');
         seccionInventario.classList.remove('oculta');
-        cargarInventario(); // Recargamos el inventario al cambiar de vista
+        cargarInventario(); 
     });
 
     const listaProductos = document.querySelector('.lista-productos');
@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderizarVentas() {
         listaProductos.innerHTML = '';
         inventario.forEach(producto => {
-            // Usa 'Forma' y 'Quedan' en lugar de 'Forma/Nombre' y 'Cuantas Quedan'
             const productoID = `${producto['Forma']}-${producto['Aroma']}`;
             const card = document.createElement('div');
             card.classList.add('producto-card');
@@ -64,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const [forma, aroma] = productoID.split('-');
         const productoInventario = inventario.find(p => 
             p['Forma'] === forma && p['Aroma'] === aroma
-        );
+        ); 
 
         if (productoInventario && productoInventario['Quedan'] > 0) {
             let productoEnCarro = carroDeCompra.find(p => p.productoID === productoID);
@@ -72,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 productoEnCarro.cantidad++;
             } else {
                 carroDeCompra.push({
-                    productoID: productoID,
+                    productoID: productoID, 
                     forma: productoInventario['Forma'],
                     aroma: productoInventario['Aroma'],
                     precio: parseFloat(productoInventario['Precio']),
@@ -92,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let total = 0;
         carroDeCompra.forEach(item => {
             const li = document.createElement('li');
-            li.textContent = `${item.cantidad}x ${item.formaNombre} - $${(item.cantidad * item.precio).toFixed(2)}`;
+            li.textContent = `${item.cantidad}x ${item.forma} - $${(item.cantidad * item.precio).toFixed(2)}`;
             listaVenta.appendChild(li);
             total += item.cantidad * item.precio;
         });
@@ -115,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Venta realizada y stock actualizado en Google Sheets.');
             carroDeCompra = [];
             actualizarCarroVenta();
-            await cargarInventario(); // Recargamos el inventario para reflejar los cambios
+            await cargarInventario(); 
         } catch (error) {
             console.error('Error durante la venta:', error);
             alert('Ocurrió un error al registrar la venta. Intenta nuevamente.');
@@ -130,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let textoResumen = "Resumen de Venta:\n";
         carroDeCompra.forEach(item => {
-            textoResumen += `${item.cantidad}x ${item.formaNombre} - $${(item.cantidad * item.precio).toFixed(2)}\n`;
+            textoResumen += `${item.cantidad}x ${item.forma} - $${(item.cantidad * item.precio).toFixed(2)}\n`;
         });
         textoResumen += `\nTotal: $${totalVentaSpan.textContent}`;
 
@@ -147,15 +146,14 @@ document.addEventListener('DOMContentLoaded', () => {
             tr.innerHTML = `
                 <td>${producto['Tipo de Cera']}</td>
                 <td>${producto['Colección']}</td>
-                <td>${producto['Forma/Nombre']}</td>
+                <td>${producto['Forma']}</td>
                 <td>${producto['Aroma']}</td>
-                <td>${producto['Cuantas Quedan']}</td>
+                <td>${producto['Quedan']}</td>
                 <td>$${parseFloat(producto['Precio']).toFixed(2)}</td>
             `;
             tablaInventarioBody.appendChild(tr);
         });
     }
-
-    // Inicializamos la carga del inventario al cargar la página
+    
     cargarInventario();
 });

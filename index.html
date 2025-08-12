@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Inventario de Velas</title>
     <link rel="stylesheet" href="style.css">
+    <script async defer src="https://apis.google.com/js/api.js" onload="handleClientLoad()"></script>
 </head>
 <body>
 
@@ -20,12 +21,12 @@
         <section id="seccionVentas" class="activa">
             <h2>Punto de Venta</h2>
             <div class="lista-productos">
-                </div>
+            </div>
 
             <div class="carro-venta">
                 <h3>Venta Actual</h3>
                 <ul id="listaVenta">
-                    </ul>
+                </ul>
                 <p>Total: $<span id="totalVenta">0.00</span></p>
                 <button id="btnRealizarVenta">Realizar Venta</button>
                 <button id="btnCopiarTexto">Copiar Resumen</button>
@@ -39,24 +40,24 @@
                     <tr>
                         <th>Tipo de Cera</th>
                         <th>Colección</th>
-                        <th>Forma/Nombre</th>
+                        <th>Forma</th> 
                         <th>Aroma</th>
-                        <th>Stock</th>
+                        <th>Quedan</th> 
                         <th>Precio</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    </tbody>
+                </tbody>
             </table>
 
             <h3>Agregar o Actualizar Producto</h3>
             <form id="formProducto">
                 <input type="text" id="tipoCera" placeholder="Tipo de Cera">
                 <input type="text" id="coleccion" placeholder="Colección">
-                <input type="text" id="formaNombre" placeholder="Forma/Nombre">
+                <input type="text" id="formaNombre" placeholder="Forma">
                 <input type="text" id="aroma" placeholder="Aroma">
-                <input type="number" id="stock" placeholder="Stock" min="0">
+                <input type="number" id="stock" placeholder="Quedan" min="0"> 
                 <input type="number" id="precio" placeholder="Precio" min="0" step="0.01">
                 <button type="submit">Guardar Producto</button>
             </form>
